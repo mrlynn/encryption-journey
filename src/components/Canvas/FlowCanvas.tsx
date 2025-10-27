@@ -244,7 +244,10 @@ export function FlowCanvas({
   }, []);
 
   return (
-    <div className="w-full h-full bg-mongo-dark-900 relative overflow-hidden">
+    <div
+      className="w-full h-full bg-mongo-dark-900 relative overflow-hidden"
+      style={{ contain: "layout style paint" }}
+    >
       {/* Background gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-mongo-dark-900 via-transparent to-accent/10 pointer-events-none"></div>
       <ReactFlow
@@ -264,6 +267,10 @@ export function FlowCanvas({
         attributionPosition="bottom-left"
         onViewportChange={handleViewportChange}
         onInit={onReactFlowInstanceChange}
+        fitView={false}
+        preventScrolling={true}
+        zoomOnScroll={false}
+        nodesDraggable={false}
       >
         {/* Background patterns */}
         {showGrid && (

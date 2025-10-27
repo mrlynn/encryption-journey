@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import { Handle, Position, NodeProps } from "@xyflow/react";
+import { motion } from "framer-motion";
 import { TraceEvent } from "@/types/trace";
 import { getActorColor } from "@/lib/colors";
 
@@ -19,27 +20,33 @@ export const MongoNode = memo(({ data, selected }: NodeProps) => {
   const nodeColor = getActorColor("mongo");
 
   return (
-    <>
+    <motion.div
+      className="relative"
+      animate={{
+        boxShadow: isActive
+          ? `0 0 ${10 + glowIntensity * 5}px ${nodeColor}30`
+          : "0 0 0px transparent",
+      }}
+      style={{
+        willChange: "box-shadow, filter"
+      }}
+      transition={{ duration: 0.3 }}
+    >
       <Handle
         type="target"
         position={Position.Left}
-        className={`w-3 h-3 bg-accent border-2 border-mongo-dark-900 transition-all duration-300 ${isActive ? "w-4 h-4" : ""}`}
+        className={`w-3 h-3 bg-accent border-2 border-mongo-dark-900 transition-colors duration-300 ${isActive ? "w-3 h-3" : ""}`}
         style={{
           boxShadow: isActive ? "0 0 5px #45B7D1" : "none",
         }}
       />
-      
-      <div 
-        className={`px-6 py-4 rounded-2xl border-2 min-w-[200px] backdrop-blur-sm transition-all duration-300 ${
+
+      <div
+        className={`px-6 py-4 rounded-2xl border-2 min-w-[200px] backdrop-blur-sm transition-colors duration-300 ${
           isActive
             ? "border-primary bg-primary/10"
             : "border-accent/20 bg-mongo-dark-700"
         }`}
-        style={{
-          boxShadow: isActive
-            ? `0 0 ${10 + glowIntensity * 5}px ${nodeColor}30`
-            : undefined,
-        }}
       >
         {/* Node Header */}
         <div className="flex items-center gap-3 mb-3">
@@ -101,16 +108,16 @@ export const MongoNode = memo(({ data, selected }: NodeProps) => {
           </div>
         )}
       </div>
-      
+
       <Handle
         type="source"
         position={Position.Right}
-        className={`w-3 h-3 bg-primary border-2 border-mongo-dark-900 transition-all duration-300 ${isActive ? "w-4 h-4" : ""}`}
+        className={`w-3 h-3 bg-primary border-2 border-mongo-dark-900 transition-colors duration-300 ${isActive ? "w-3 h-3" : ""}`}
         style={{
           boxShadow: isActive ? "0 0 5px #00ED64" : "none",
         }}
       />
-    </>
+    </motion.div>
   );
 });
 

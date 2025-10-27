@@ -25,10 +25,12 @@ export const ClientNode = memo(({ data, selected }: NodeProps) => {
     <motion.div
       className="relative"
       animate={{
-        scale: isActive ? 1.05 : 1,
         boxShadow: isActive
           ? `0 0 ${20 + glowIntensity * 10}px ${nodeColor}50`
           : "0 0 0px transparent",
+      }}
+      style={{
+        willChange: "box-shadow, filter"
       }}
       transition={{ duration: 0.3 }}
     >

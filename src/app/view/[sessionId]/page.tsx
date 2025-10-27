@@ -180,7 +180,7 @@ export default function VisualizerPage() {
   };
 
   return (
-    <div className="min-h-screen bg-mongo-dark-900 flex flex-col pt-16">
+    <div className="h-screen bg-mongo-dark-900 flex flex-col pt-16">
       {/* Visualization Controls */}
       <div className="bg-mongo-dark-800 border-b border-accent/20 px-6 py-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -281,9 +281,9 @@ export default function VisualizerPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex">
+      <div className="flex-1 flex min-h-0 overflow-hidden">
         {/* Canvas */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative overflow-hidden">
           <FlowCanvas
             session={session}
             playbackState={playbackState}
