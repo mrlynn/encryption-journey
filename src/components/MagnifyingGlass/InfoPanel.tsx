@@ -60,27 +60,30 @@ export const InfoPanel = ({
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="fixed left-4 top-1/2 w-80 bg-mongo-dark-800/95 border border-accent/30 rounded-lg shadow-2xl overflow-hidden z-40 transform -translate-y-1/2"
+          className="fixed left-4 top-1/2 w-80 bg-mongo-dark-800/70 backdrop-blur-md border border-accent/40 rounded-lg shadow-2xl overflow-hidden z-40 transform -translate-y-1/2"
+          style={{
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 0 1px rgba(0, 237, 100, 0.05)",
+          }}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.3 }}
         >
-          {/* Header */}
-          <div className="bg-mongo-dark-700/80 p-3 border-b border-accent/20">
-            <h3 className="text-sm font-semibold text-primary">Data Inspector</h3>
+          {/* Header - with glass effect */}
+          <div className="bg-mongo-dark-700/50 backdrop-blur-md p-3 border-b border-accent/30">
+            <h3 className="text-sm font-semibold text-primary drop-shadow-sm">Data Inspector</h3>
             <div className="flex items-center gap-1 mt-1">
-              <span className="text-xs font-mono bg-accent/20 text-accent px-1 py-0.5 rounded">
+              <span className="text-xs font-mono bg-accent/20 text-accent px-1 py-0.5 rounded backdrop-blur-sm">
                 {event.phase}
               </span>
-              <span className="text-xs text-neutral-400">
-                in <span className="text-neutral-300">{event.actor}</span>
+              <span className="text-xs text-neutral-300">
+                in <span className="text-primary/90">{event.actor}</span>
               </span>
             </div>
           </div>
 
-          {/* Content */}
-          <div className="p-3 space-y-4">
+          {/* Content - with improved contrast for glass effect */}
+          <div className="p-3 space-y-4 text-neutral-200">
             {/* Phase Description */}
             <div>
               <h4 className="text-xs uppercase tracking-wide text-neutral-400 mb-1">
@@ -105,7 +108,7 @@ export const InfoPanel = ({
                 <h4 className="text-xs uppercase tracking-wide text-neutral-400 mb-2">
                   Field Analysis
                 </h4>
-                <div className="bg-mongo-dark-900/60 rounded p-2 space-y-2">
+                <div className="bg-mongo-dark-900/80 backdrop-blur-sm rounded p-2 space-y-2 border border-mongo-dark-700/80 shadow-inner">
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium text-neutral-300">
                       {focusField.name}
@@ -121,19 +124,22 @@ export const InfoPanel = ({
                     </div>
                   </div>
 
-                  {/* Before/After Comparison */}
+                  {/* Before/After Comparison with enhanced glass effect */}
                   <div className="grid grid-cols-2 gap-2 mt-1">
-                    <div className="text-xs p-2 bg-mongo-dark-900 rounded border border-accent/10">
-                      <div className="text-neutral-500 mb-1">Original</div>
-                      <div className="font-mono text-neutral-300">
+                    <div className="text-xs p-2 bg-mongo-dark-900/90 backdrop-blur-sm rounded border border-accent/5 shadow-sm">
+                      <div className="text-neutral-400 mb-1 font-medium">Original</div>
+                      <div className="font-mono text-neutral-200">
                         {focusField.visibleSample || "[Redacted]"}
                       </div>
                     </div>
-                    <div className="text-xs p-2 bg-mongo-dark-900 rounded border border-accent/10">
-                      <div className="text-neutral-500 mb-1">
+                    <div className="text-xs p-2 bg-mongo-dark-900/90 backdrop-blur-sm rounded border border-accent/5 shadow-sm">
+                      <div className="text-neutral-400 mb-1 font-medium">
                         {showCiphertext ? "Encrypted" : "As Viewed"}
                       </div>
-                      <div className="font-mono" style={{ color: getEncryptionDescription(focusField.encryption).color }}>
+                      <div className="font-mono font-medium" style={{
+                        color: getEncryptionDescription(focusField.encryption).color,
+                        textShadow: showCiphertext && focusField.encryption !== "none" ? "0 0 3px rgba(0,0,0,0.5)" : "none"
+                      }}>
                         {showCiphertext && focusField.encryption !== "none"
                           ? (focusField.encryption === "qe"
                               ? "0x62f3a55c9..."
@@ -162,39 +168,42 @@ export const InfoPanel = ({
 
             {/* Journey Context */}
             <div className="border-t border-accent/10 pt-3">
-              <h4 className="text-xs uppercase tracking-wide text-neutral-400 mb-2">
+              <h4 className="text-xs uppercase tracking-wide text-neutral-400 font-medium mb-2">
                 Data Journey
               </h4>
-              <div className="flex items-center text-xs">
-                <div className={`flex-1 ${event.phase === "CLIENT_ENCRYPT" || event.phase === "CLIENT_DECRYPT" ? "text-primary" : "text-neutral-500"}`}>
-                  Client
+              <div className="bg-mongo-dark-900/70 backdrop-blur-sm rounded-lg p-3 border border-accent/10 shadow-inner">
+                <div className="flex items-center text-xs">
+                  <div className={`flex-1 font-medium ${event.phase === "CLIENT_ENCRYPT" || event.phase === "CLIENT_DECRYPT" ? "text-primary drop-shadow-sm" : "text-neutral-400"}`}>
+                    Client
+                  </div>
+                  <div className="w-4 h-px bg-accent/30"></div>
+                  <div className={`flex-1 text-center font-medium ${event.phase === "API_RECEIVE" || event.phase === "API_RESPOND" ? "text-primary drop-shadow-sm" : "text-neutral-400"}`}>
+                    API
+                  </div>
+                  <div className="w-4 h-px bg-accent/30"></div>
+                  <div className={`flex-1 text-center font-medium ${event.phase === "DRIVER_SEND" || event.phase === "DRIVER_RECEIVE" ? "text-primary drop-shadow-sm" : "text-neutral-400"}`}>
+                    Driver
+                  </div>
+                  <div className="w-4 h-px bg-accent/30"></div>
+                  <div className={`flex-1 text-right font-medium ${event.phase === "MONGO_MATCH_QE" || event.phase === "MONGO_STORE" || event.phase === "MONGO_READ" ? "text-primary drop-shadow-sm" : "text-neutral-400"}`}>
+                    MongoDB
+                  </div>
                 </div>
-                <div className="w-4 h-px bg-accent/30"></div>
-                <div className={`flex-1 text-center ${event.phase === "API_RECEIVE" || event.phase === "API_RESPOND" ? "text-primary" : "text-neutral-500"}`}>
-                  API
+                <div className="h-2 bg-mongo-dark-800/80 rounded-full mt-2 relative backdrop-blur-sm shadow-inner border border-accent/5">
+                  <div
+                    className="absolute h-2 bg-primary/80 rounded-full backdrop-blur-sm"
+                    style={{
+                      boxShadow: "0 0 8px rgba(0, 237, 100, 0.5)",
+                      width: `${event.phase === "CLIENT_ENCRYPT" ? "10%" :
+                        event.phase === "API_RECEIVE" ? "30%" :
+                        event.phase === "DRIVER_SEND" ? "40%" :
+                        event.phase === "MONGO_MATCH_QE" || event.phase === "MONGO_STORE" ? "60%" :
+                        event.phase === "MONGO_READ" ? "70%" :
+                        event.phase === "DRIVER_RECEIVE" ? "80%" :
+                        event.phase === "API_RESPOND" ? "90%" : "100%"}`
+                    }}
+                  ></div>
                 </div>
-                <div className="w-4 h-px bg-accent/30"></div>
-                <div className={`flex-1 text-center ${event.phase === "DRIVER_SEND" || event.phase === "DRIVER_RECEIVE" ? "text-primary" : "text-neutral-500"}`}>
-                  Driver
-                </div>
-                <div className="w-4 h-px bg-accent/30"></div>
-                <div className={`flex-1 text-right ${event.phase === "MONGO_MATCH_QE" || event.phase === "MONGO_STORE" || event.phase === "MONGO_READ" ? "text-primary" : "text-neutral-500"}`}>
-                  MongoDB
-                </div>
-              </div>
-              <div className="h-1 bg-mongo-dark-700 rounded-full mt-1 relative">
-                <div
-                  className="absolute h-1 bg-primary rounded-full"
-                  style={{
-                    width: `${event.phase === "CLIENT_ENCRYPT" ? "10%" :
-                      event.phase === "API_RECEIVE" ? "30%" :
-                      event.phase === "DRIVER_SEND" ? "40%" :
-                      event.phase === "MONGO_MATCH_QE" || event.phase === "MONGO_STORE" ? "60%" :
-                      event.phase === "MONGO_READ" ? "70%" :
-                      event.phase === "DRIVER_RECEIVE" ? "80%" :
-                      event.phase === "API_RESPOND" ? "90%" : "100%"}`
-                  }}
-                ></div>
               </div>
             </div>
           </div>
