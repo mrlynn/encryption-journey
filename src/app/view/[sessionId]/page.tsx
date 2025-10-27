@@ -6,7 +6,6 @@ import { TraceSession, TraceEvent, PlaybackState } from "@/types/trace";
 import { FlowCanvas } from "@/components/Canvas/FlowCanvas";
 import { Timeline } from "@/components/Sidebar/Timeline";
 import { Inspector } from "@/components/Sidebar/Inspector";
-import { Legend } from "@/components/Overlays/Legend";
 import { DetailedExplanationPanel } from "@/components/Explanation/DetailedExplanationPanel";
 import { EncryptionTour } from "@/components/Tour/EncryptionTour";
 
@@ -292,9 +291,6 @@ export default function VisualizerPage() {
             onEventSelect={handleEventSelect}
             onReactFlowInstanceChange={setReactFlowInstance}
           />
-          
-          {/* Overlays */}
-          <Legend explainMode={playbackState.explainMode} />
         </div>
 
         {/* Sidebar with Tabbed Interface */}

@@ -9,7 +9,8 @@
       "Bash(lsof:*)",
       "Bash(awk:*)",
       "Bash(xargs kill:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

@@ -17,6 +17,7 @@ import {
   Panel,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import { AnimatePresence } from "framer-motion";
 
 import { TraceSession, TraceEvent, PlaybackState, NodeState } from "@/types/trace";
 import { createDefaultNodes, createDefaultEdges } from "@/lib/layout";
@@ -83,7 +84,7 @@ export function FlowCanvas({
   const [backgroundVariant, setBackgroundVariant] = useState<BackgroundVariant>(BackgroundVariant.Dots);
   const [secondaryBackground, setSecondaryBackground] = useState<boolean>(true);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
-  const [showControlPanel, setShowControlPanel] = useState<boolean>(false);
+  const [showSettingsPanel, setShowSettingsPanel] = useState<boolean>(false);
 
   // Magnifying glass states
   const [magnifyingGlassActive, setMagnifyingGlassActive] = useState<boolean>(false);
@@ -321,11 +322,11 @@ export function FlowCanvas({
           />
         )}
 
-        {/* Visualization Controls Button - Positioned below the Legend */}
-        <Panel position="top-right" className="mr-2 mt-48">
+        {/* Settings Button - Top Right */}
+        <Panel position="top-right" className="mr-2 mt-2">
           <button
-            onClick={() => setShowControlPanel(!showControlPanel)}
-            className="bg-mongo-dark-800 hover:bg-mongo-dark-700 border border-accent/20 text-neutral-300 rounded p-2 text-xs shadow-md"
+            onClick={() => setShowSettingsPanel(!showSettingsPanel)}
+            className="bg-mongo-dark-800 hover:bg-mongo-dark-700 border border-accent/20 text-neutral-300 rounded p-2 text-xs shadow-md transition-colors"
             title="Visualization Settings"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -335,117 +336,68 @@ export function FlowCanvas({
           </button>
         </Panel>
 
-        {/* Custom Controls Panel */}
-        {showControlPanel && (
-          <Panel position="top-right" className="bg-mongo-dark-800 border border-accent/20 p-3 rounded shadow-md mr-2 mt-40 w-64">
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <h3 className="text-xs font-medium text-neutral-300">Visualization Controls</h3>
-                <button
-                  onClick={() => setShowControlPanel(false)}
-                  className="text-neutral-400 hover:text-neutral-200 text-xs"
-                >
-                  × Close
-                </button>
-              </div>
-
-              {/* Toggle MiniMap */}
-              <div className="flex items-center justify-between">
-                <label className="text-xs text-neutral-400">Mini Map</label>
-                <button
-                  onClick={() => setShowMiniMap(!showMiniMap)}
-                  className={`w-8 h-4 rounded-full ${showMiniMap ? 'bg-primary' : 'bg-neutral-600'} relative transition-colors`}
-                >
-                  <span className={`absolute w-3 h-3 rounded-full bg-white top-0.5 transition-transform ${showMiniMap ? 'translate-x-4' : 'translate-x-0.5'}`} />
-                </button>
-              </div>
-
-              {/* Toggle Grid */}
-              <div className="flex items-center justify-between">
-                <label className="text-xs text-neutral-400">Grid</label>
-                <button
-                  onClick={() => setShowGrid(!showGrid)}
-                  className={`w-8 h-4 rounded-full ${showGrid ? 'bg-primary' : 'bg-neutral-600'} relative transition-colors`}
-                >
-                  <span className={`absolute w-3 h-3 rounded-full bg-white top-0.5 transition-transform ${showGrid ? 'translate-x-4' : 'translate-x-0.5'}`} />
-                </button>
-              </div>
-
-              {/* Toggle Secondary Background */}
-              <div className="flex items-center justify-between">
-                <label className="text-xs text-neutral-400">Layered Background</label>
-                <button
-                  onClick={() => setSecondaryBackground(!secondaryBackground)}
-                  className={`w-8 h-4 rounded-full ${secondaryBackground ? 'bg-primary' : 'bg-neutral-600'} relative transition-colors`}
-                  disabled={!showGrid}
-                >
-                  <span className={`absolute w-3 h-3 rounded-full bg-white top-0.5 transition-transform ${secondaryBackground ? 'translate-x-4' : 'translate-x-0.5'}`} />
-                </button>
-              </div>
-
-              {/* Toggle Controls */}
-              <div className="flex items-center justify-between">
-                <label className="text-xs text-neutral-400">Navigation Controls</label>
-                <button
-                  onClick={() => setShowControls(!showControls)}
-                  className={`w-8 h-4 rounded-full ${showControls ? 'bg-primary' : 'bg-neutral-600'} relative transition-colors`}
-                >
-                  <span className={`absolute w-3 h-3 rounded-full bg-white top-0.5 transition-transform ${showControls ? 'translate-x-4' : 'translate-x-0.5'}`} />
-                </button>
-              </div>
-
-              {/* Toggle Magnifying Glass */}
-              <div className="flex items-center justify-between">
-                <label className="text-xs text-neutral-400">Magnifying Glass</label>
-                <button
-                  onClick={() => setMagnifyingGlassActive(!magnifyingGlassActive)}
-                  className={`w-8 h-4 rounded-full ${magnifyingGlassActive ? 'bg-primary' : 'bg-neutral-600'} relative transition-colors`}
-                >
-                  <span className={`absolute w-3 h-3 rounded-full bg-white top-0.5 transition-transform ${magnifyingGlassActive ? 'translate-x-4' : 'translate-x-0.5'}`} />
-                </button>
-              </div>
-
-              {/* Background Pattern Selector */}
-              <div className="space-y-1">
-                <label className="text-xs text-neutral-400 block">Pattern Style</label>
-                <div className="flex gap-1">
+        {/* Settings Panel */}
+        <AnimatePresence>
+          {showSettingsPanel && (
+            <Panel position="top-right" className="mr-2 mt-12 w-64 bg-mongo-dark-800 border border-accent/20 rounded-lg shadow-xl p-4">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-sm font-semibold text-neutral-200">Settings</h3>
                   <button
-                    onClick={() => setBackgroundVariant(BackgroundVariant.Dots)}
-                    className={`w-6 h-6 rounded flex items-center justify-center text-xs ${backgroundVariant === BackgroundVariant.Dots ? 'bg-primary text-mongo-dark-900' : 'bg-mongo-dark-700 text-neutral-400'}`}
-                    title="Dots"
-                    disabled={!showGrid}
+                    onClick={() => setShowSettingsPanel(false)}
+                    className="text-neutral-400 hover:text-neutral-200 text-xs"
                   >
-                    •••
-                  </button>
-                  <button
-                    onClick={() => setBackgroundVariant(BackgroundVariant.Lines)}
-                    className={`w-6 h-6 rounded flex items-center justify-center text-xs ${backgroundVariant === BackgroundVariant.Lines ? 'bg-primary text-mongo-dark-900' : 'bg-mongo-dark-700 text-neutral-400'}`}
-                    title="Lines"
-                    disabled={!showGrid}
-                  >
-                    |||
-                  </button>
-                  <button
-                    onClick={() => setBackgroundVariant(BackgroundVariant.Cross)}
-                    className={`w-6 h-6 rounded flex items-center justify-center text-xs ${backgroundVariant === BackgroundVariant.Cross ? 'bg-primary text-mongo-dark-900' : 'bg-mongo-dark-700 text-neutral-400'}`}
-                    title="Cross"
-                    disabled={!showGrid}
-                  >
-                    ＋
+                    ×
                   </button>
                 </div>
-              </div>
 
-              {/* Current Zoom Level */}
-              <div className="pt-1 border-t border-accent/20">
+                {/* Toggle MiniMap */}
                 <div className="flex items-center justify-between">
-                  <label className="text-xs text-neutral-400">Zoom</label>
-                  <span className="text-xs text-neutral-300">{(zoomLevel * 100).toFixed(0)}%</span>
+                  <label className="text-xs text-neutral-400">Mini Map</label>
+                  <button
+                    onClick={() => setShowMiniMap(!showMiniMap)}
+                    className={`w-10 h-5 rounded-full ${showMiniMap ? 'bg-primary' : 'bg-neutral-600'} relative transition-colors`}
+                  >
+                    <span className={`absolute w-4 h-4 rounded-full bg-white top-0.5 transition-transform ${showMiniMap ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                  </button>
+                </div>
+
+                {/* Toggle Grid */}
+                <div className="flex items-center justify-between">
+                  <label className="text-xs text-neutral-400">Grid</label>
+                  <button
+                    onClick={() => setShowGrid(!showGrid)}
+                    className={`w-10 h-5 rounded-full ${showGrid ? 'bg-primary' : 'bg-neutral-600'} relative transition-colors`}
+                  >
+                    <span className={`absolute w-4 h-4 rounded-full bg-white top-0.5 transition-transform ${showGrid ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                  </button>
+                </div>
+
+                {/* Toggle Controls */}
+                <div className="flex items-center justify-between">
+                  <label className="text-xs text-neutral-400">Nav Controls</label>
+                  <button
+                    onClick={() => setShowControls(!showControls)}
+                    className={`w-10 h-5 rounded-full ${showControls ? 'bg-primary' : 'bg-neutral-600'} relative transition-colors`}
+                  >
+                    <span className={`absolute w-4 h-4 rounded-full bg-white top-0.5 transition-transform ${showControls ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                  </button>
+                </div>
+
+                {/* Toggle Magnifying Glass */}
+                <div className="flex items-center justify-between">
+                  <label className="text-xs text-neutral-400">Magnifying Glass</label>
+                  <button
+                    onClick={() => setMagnifyingGlassActive(!magnifyingGlassActive)}
+                    className={`w-10 h-5 rounded-full ${magnifyingGlassActive ? 'bg-primary' : 'bg-neutral-600'} relative transition-colors`}
+                  >
+                    <span className={`absolute w-4 h-4 rounded-full bg-white top-0.5 transition-transform ${magnifyingGlassActive ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                  </button>
                 </div>
               </div>
-            </div>
-          </Panel>
-        )}
+            </Panel>
+          )}
+        </AnimatePresence>
       </ReactFlow>
 
       {/* Magnifying glass overlay */}

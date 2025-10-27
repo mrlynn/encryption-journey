@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TraceEvent } from "@/types/trace";
 import { DataPreview } from "./DataPreview";
+import { InfoPanel } from "./InfoPanel";
 
 interface MagnifyingGlassProps {
   isActive: boolean;
@@ -20,6 +21,7 @@ export const MagnifyingGlass = ({
 }: MagnifyingGlassProps) => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const magnifyingGlassRef = useRef<HTMLDivElement>(null);
+  const [showInfoPanel, setShowInfoPanel] = useState(false);
 
   // Update cursor position when mouse moves
   useEffect(() => {
@@ -35,66 +37,135 @@ export const MagnifyingGlass = ({
     };
   }, [isActive]);
 
+  // Show info panel when we have hover data
+  useEffect(() => {
+    if (hoverEvent) {
+      // Small delay to prevent flickering on brief hovers
+      const timer = setTimeout(() => {
+        setShowInfoPanel(true);
+      }, 100);
+      return () => clearTimeout(timer);
+    } else {
+      // Small delay before hiding to prevent flickering
+      const timer = setTimeout(() => {
+        setShowInfoPanel(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [hoverEvent]);
+
   if (!isActive) return null;
 
   return (
-    <AnimatePresence>
-      {isActive && (
-        <motion.div
-          ref={magnifyingGlassRef}
-          className="pointer-events-none absolute z-50"
+    <>
+      {/* Info Panel */}
+      <InfoPanel
+        isVisible={isActive && showInfoPanel}
+        event={hoverEvent}
+        showCiphertext={showCiphertext}
+        position={cursorPosition}
+      />
+
+      {/* Connection line between magnifying glass and panel */}
+      {hoverEvent && showInfoPanel && (
+        <svg
+          className="absolute top-0 left-0 w-full h-full pointer-events-none z-30"
           style={{
-            left: cursorPosition.x,
-            top: cursorPosition.y,
-            transform: "translate(-50%, -50%)",
+            position: 'fixed',
+            overflow: 'visible'
           }}
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5 }}
-          transition={{ duration: 0.2 }}
         >
-          {/* Magnifying glass handle */}
-          <div
-            className="absolute"
-            style={{
-              width: 5,
-              height: 60,
-              backgroundColor: "#00ED64",
-              bottom: -50,
-              right: -20,
-              transform: "rotate(-45deg)",
-              boxShadow: "0 0 10px rgba(0, 237, 100, 0.5)",
-            }}
+          <motion.path
+            d={`M${cursorPosition.x},${cursorPosition.y} Q${cursorPosition.x + 100},${cursorPosition.y} ${window.innerWidth - 160},${window.innerHeight / 2}`}
+            fill="none"
+            stroke="#00ED64"
+            strokeWidth="2"
+            strokeDasharray="5,5"
+            strokeLinecap="round"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 0.5 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
           />
-
-          {/* Magnifying glass frame */}
-          <div
-            className="rounded-full border-4 border-primary flex items-center justify-center overflow-hidden bg-mongo-dark-800/80"
-            style={{
-              width: 120,
-              height: 120,
-              boxShadow: "0 0 15px rgba(0, 237, 100, 0.5), inset 0 0 10px rgba(0, 237, 100, 0.3)",
-            }}
-          >
-            {/* Crosshair */}
-            <div className="absolute w-full h-[2px] bg-primary/20" />
-            <div className="absolute w-[2px] h-full bg-primary/20" />
-
-            {/* Content display */}
-            <div className="w-full h-full flex items-center justify-center p-2">
-              {hoverEvent ? (
-                <DataPreview event={hoverEvent} isCiphertext={showCiphertext} />
-              ) : (
-                <div className="text-center text-xs text-primary/70">
-                  <p>Hover over an edge</p>
-                  <p>to inspect data</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </motion.div>
+        </svg>
       )}
-    </AnimatePresence>
+
+      <AnimatePresence>
+        {isActive && (
+          <motion.div
+            ref={magnifyingGlassRef}
+            className="pointer-events-none absolute z-50"
+            style={{
+              left: cursorPosition.x,
+              top: cursorPosition.y,
+              transform: "translate(-50%, -50%)",
+            }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ duration: 0.2 }}
+          >
+            {/* Magnifying glass handle */}
+            <div
+              className="absolute"
+              style={{
+                width: 5,
+                height: 60,
+                backgroundColor: "#00ED64",
+                bottom: -50,
+                right: -20,
+                transform: "rotate(-45deg)",
+                boxShadow: "0 0 10px rgba(0, 237, 100, 0.5)",
+              }}
+            />
+
+            {/* Magnifying glass frame */}
+            <div
+              className={`rounded-full border-4 flex items-center justify-center overflow-hidden bg-mongo-dark-800/80 transition-all duration-300 ${hoverEvent ? 'border-primary' : 'border-neutral-500'}`}
+              style={{
+                width: 120,
+                height: 120,
+                boxShadow: hoverEvent
+                  ? "0 0 15px rgba(0, 237, 100, 0.5), inset 0 0 10px rgba(0, 237, 100, 0.3)"
+                  : "0 0 10px rgba(100, 100, 100, 0.3), inset 0 0 10px rgba(100, 100, 100, 0.2)",
+              }}
+            >
+              {/* Crosshair */}
+              <div className={`absolute w-full h-[2px] ${hoverEvent ? 'bg-primary/20' : 'bg-neutral-500/20'}`} />
+              <div className={`absolute w-[2px] h-full ${hoverEvent ? 'bg-primary/20' : 'bg-neutral-500/20'}`} />
+
+              {/* Content display */}
+              <div className="w-full h-full flex items-center justify-center p-2">
+                {hoverEvent ? (
+                  <DataPreview event={hoverEvent} isCiphertext={showCiphertext} />
+                ) : (
+                  <div className="text-center text-xs text-neutral-400">
+                    <p>Hover over an edge</p>
+                    <p>to inspect data</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Pulse animation when data is available */}
+            {hoverEvent && (
+              <motion.div
+                className="absolute w-full h-full rounded-full border border-primary"
+                initial={{ scale: 0.8, opacity: 0.7 }}
+                animate={{
+                  scale: [0.8, 1.2, 0.8],
+                  opacity: [0.7, 0, 0.7],
+                }}
+                transition={{
+                  duration: 2,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                }}
+              />
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
