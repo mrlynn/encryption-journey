@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+:root {
+  --background: #001E2B;
+  --foreground: #C1BEBC;
+  --primary: #00ED64;
+  --accent: #00684A;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-inter);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #001E2B;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00684A;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00ED64;
+}
+
+/* React Flow custom styles */
+.react-flow__node {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Ensure nodes stay rounded during interactions */
+.react-flow__node > div,
+.react-flow__node-drag {
+  border-radius: 1rem !important; /* rounded-2xl = 1rem */
+  overflow: hidden;
+}
+
+.react-flow__edge-path {
+  stroke: #00684A;
+  stroke-width: 2;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #00ED64;
+}
+
+.react-flow__controls {
+  background: rgba(0, 30, 43, 0.9);
+  border: 1px solid #00684A;
+}
+
+.react-flow__controls-button {
+  background: transparent;
+  border: none;
+  color: #C1BEBC;
+}
+
+.react-flow__controls-button:hover {
+  background: #00684A;
+  color: #00ED64;
+}
+
+/* Animation utilities */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 237, 100, 0.5);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 237, 100, 0.8);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes flow-dot {
+  0% {
+    offset-distance: 0%;
+  }
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-flow-dot {
+  animation: flow-dot 3s linear infinite;
+}
