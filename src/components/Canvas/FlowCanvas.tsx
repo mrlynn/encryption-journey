@@ -323,11 +323,11 @@ export function FlowCanvas({
           />
         )}
 
-        {/* Visualization Controls Button */}
-        <Panel position="top-right" className="mr-2 mt-20">
+        {/* Visualization Controls Button - Positioned below the Legend */}
+        <Panel position="top-right" className="mr-2 mt-36">
           <button
             onClick={() => setShowControlPanel(!showControlPanel)}
-            className="bg-mongo-dark-800 hover:bg-mongo-dark-700 border border-accent/20 text-neutral-300 rounded p-2 text-xs"
+            className="bg-mongo-dark-800 hover:bg-mongo-dark-700 border border-accent/20 text-neutral-300 rounded p-2 text-xs shadow-md"
             title="Visualization Settings"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -339,7 +339,7 @@ export function FlowCanvas({
 
         {/* Custom Controls Panel */}
         {showControlPanel && (
-          <Panel position="top-right" className="bg-mongo-dark-800 border border-accent/20 p-3 rounded shadow-md mr-2 mt-12 w-64">
+          <Panel position="top-right" className="bg-mongo-dark-800 border border-accent/20 p-3 rounded shadow-md mr-2 mt-40 w-64">
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <h3 className="text-xs font-medium text-neutral-300">Visualization Controls</h3>
