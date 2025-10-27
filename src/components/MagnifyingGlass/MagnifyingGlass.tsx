@@ -80,7 +80,7 @@ export const MagnifyingGlass = ({
           }}
         >
           <motion.path
-            d={`M${cursorPosition.x},${cursorPosition.y} Q${cursorPosition.x - 80},${cursorPosition.y} 160,${window.innerHeight / 2}`}
+            d={`M${cursorPosition.x},${cursorPosition.y} Q${cursorPosition.x - 100},${cursorPosition.y} 160,${window.innerHeight / 2}`}
             fill="none"
             stroke="#00ED64"
             strokeWidth="2"
@@ -101,7 +101,8 @@ export const MagnifyingGlass = ({
             style={{
               left: cursorPosition.x,
               top: cursorPosition.y,
-              transform: "translate(-60px, -60px)", // Fixed offset instead of percentage-based centering
+              transform: "translate(-50%, -50%)", // Center exactly on cursor
+              pointerEvents: "none"
             }}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -112,13 +113,14 @@ export const MagnifyingGlass = ({
             <div
               className="absolute"
               style={{
-                width: 5,
-                height: 50,
+                width: 4,
+                height: 40,
                 backgroundColor: "#00ED64",
-                bottom: -35,
-                right: -15,
+                bottom: -30,
+                right: -25,
                 transform: "rotate(-45deg)",
                 boxShadow: "0 0 10px rgba(0, 237, 100, 0.5)",
+                pointerEvents: "none"
               }}
             />
 
