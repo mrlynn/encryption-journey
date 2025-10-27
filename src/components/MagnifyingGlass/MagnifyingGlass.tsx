@@ -28,7 +28,11 @@ export const MagnifyingGlass = ({
     if (!isActive) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      setCursorPosition({ x: e.clientX, y: e.clientY });
+      // Apply a slight offset to make the glass feel more natural when following the cursor
+      setCursorPosition({
+        x: e.clientX,
+        y: e.clientY
+      });
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -76,7 +80,7 @@ export const MagnifyingGlass = ({
           }}
         >
           <motion.path
-            d={`M${cursorPosition.x},${cursorPosition.y} Q${cursorPosition.x - 100},${cursorPosition.y} 160,${window.innerHeight / 2}`}
+            d={`M${cursorPosition.x},${cursorPosition.y} Q${cursorPosition.x - 80},${cursorPosition.y} 160,${window.innerHeight / 2}`}
             fill="none"
             stroke="#00ED64"
             strokeWidth="2"
@@ -97,7 +101,7 @@ export const MagnifyingGlass = ({
             style={{
               left: cursorPosition.x,
               top: cursorPosition.y,
-              transform: "translate(-50%, -50%)",
+              transform: "translate(-60px, -60px)", // Fixed offset instead of percentage-based centering
             }}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -109,10 +113,10 @@ export const MagnifyingGlass = ({
               className="absolute"
               style={{
                 width: 5,
-                height: 60,
+                height: 50,
                 backgroundColor: "#00ED64",
-                bottom: -50,
-                right: -20,
+                bottom: -35,
+                right: -15,
                 transform: "rotate(-45deg)",
                 boxShadow: "0 0 10px rgba(0, 237, 100, 0.5)",
               }}
