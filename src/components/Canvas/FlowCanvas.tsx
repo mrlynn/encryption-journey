@@ -15,8 +15,6 @@ import {
   BackgroundVariant,
   MiniMap,
   Panel,
-  OnEdgeMouseEnter,
-  OnEdgeMouseLeave,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -221,8 +219,8 @@ export function FlowCanvas({
   }, []);
 
   // Handle edge hover to show data in magnifying glass
-  const onEdgeMouseEnter: OnEdgeMouseEnter = useCallback(
-    (event, edge) => {
+  const onEdgeMouseEnter = useCallback(
+    (event: React.MouseEvent, edge: Edge) => {
       if (!magnifyingGlassActive) return;
 
       setHoverEdge(edge);
@@ -239,7 +237,7 @@ export function FlowCanvas({
   );
 
   // Handle edge mouse leave
-  const onEdgeMouseLeave: OnEdgeMouseLeave = useCallback(() => {
+  const onEdgeMouseLeave = useCallback(() => {
     setHoverEdge(null);
     setHoverEvent(null);
   }, []);
@@ -324,7 +322,7 @@ export function FlowCanvas({
         )}
 
         {/* Visualization Controls Button - Positioned below the Legend */}
-        <Panel position="top-right" className="mr-2 mt-36">
+        <Panel position="top-right" className="mr-2 mt-48">
           <button
             onClick={() => setShowControlPanel(!showControlPanel)}
             className="bg-mongo-dark-800 hover:bg-mongo-dark-700 border border-accent/20 text-neutral-300 rounded p-2 text-xs shadow-md"

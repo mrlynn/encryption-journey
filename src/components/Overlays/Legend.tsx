@@ -121,7 +121,7 @@ export const Legend = memo(({ explainMode }: LegendProps) => {
   ];
 
   return (
-    <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+    <div className="absolute top-4 right-4 z-10">
       {/* Toggle Button */}
       <motion.button
         className="bg-mongo-dark-800 hover:bg-mongo-dark-700 border border-accent/20 text-neutral-200 px-4 py-2 rounded-lg shadow-lg transition-colors"
@@ -139,7 +139,7 @@ export const Legend = memo(({ explainMode }: LegendProps) => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="absolute top-14 right-0 w-80 bg-mongo-dark-800 border border-accent/20 rounded-lg shadow-xl overflow-hidden"
+            className="absolute top-12 right-0 w-80 bg-mongo-dark-800 border border-accent/20 rounded-lg shadow-xl overflow-hidden"
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
