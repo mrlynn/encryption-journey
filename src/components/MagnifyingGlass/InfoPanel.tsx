@@ -60,10 +60,10 @@ export const InfoPanel = ({
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="fixed right-4 top-1/2 w-80 bg-mongo-dark-800/95 border border-accent/30 rounded-lg shadow-2xl overflow-hidden z-40 transform -translate-y-1/2"
-          initial={{ opacity: 0, x: 20 }}
+          className="fixed left-4 top-1/2 w-80 bg-mongo-dark-800/95 border border-accent/30 rounded-lg shadow-2xl overflow-hidden z-40 transform -translate-y-1/2"
+          initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 20 }}
+          exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.3 }}
         >
           {/* Header */}

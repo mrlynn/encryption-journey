@@ -76,7 +76,7 @@ export const MagnifyingGlass = ({
           }}
         >
           <motion.path
-            d={`M${cursorPosition.x},${cursorPosition.y} Q${cursorPosition.x + 100},${cursorPosition.y} ${window.innerWidth - 160},${window.innerHeight / 2}`}
+            d={`M${cursorPosition.x},${cursorPosition.y} Q${cursorPosition.x - 100},${cursorPosition.y} 160,${window.innerHeight / 2}`}
             fill="none"
             stroke="#00ED64"
             strokeWidth="2"
