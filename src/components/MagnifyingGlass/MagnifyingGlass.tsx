@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { TraceEvent } from "@/types/trace";
 import { DataPreview } from "./DataPreview";
@@ -23,12 +23,12 @@ export const MagnifyingGlass = ({
   const magnifyingGlassRef = useRef<HTMLDivElement>(null);
   const [showInfoPanel, setShowInfoPanel] = useState(false);
 
-  // Update cursor position when mouse moves
-  useEffect(() => {
+  // Update cursor position when mouse moves - using useLayoutEffect for synchronous DOM updates
+  useLayoutEffect(() => {
     if (!isActive) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Apply a slight offset to make the glass feel more natural when following the cursor
+      // Set exact cursor position without any offset
       setCursorPosition({
         x: e.clientX,
         y: e.clientY
@@ -86,6 +86,7 @@ export const MagnifyingGlass = ({
             strokeWidth="2"
             strokeDasharray="5,5"
             strokeLinecap="round"
+            strokeOpacity="0.8"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 0.5 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
@@ -97,12 +98,14 @@ export const MagnifyingGlass = ({
         {isActive && (
           <motion.div
             ref={magnifyingGlassRef}
-            className="pointer-events-none absolute z-50"
+            className="pointer-events-none z-50"
             style={{
-              left: cursorPosition.x,
-              top: cursorPosition.y,
-              transform: "translate(-50%, -50%)", // Center exactly on cursor
-              pointerEvents: "none"
+              position: 'fixed',
+              left: `${cursorPosition.x}px`,
+              top: `${cursorPosition.y}px`,
+              transform: "translate(-50%, -50%)",
+              pointerEvents: "none",
+              willChange: "transform, left, top" // Performance optimization
             }}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -116,11 +119,12 @@ export const MagnifyingGlass = ({
                 width: 4,
                 height: 40,
                 backgroundColor: "#00ED64",
-                bottom: -30,
-                right: -25,
+                bottom: -32,
+                right: -28,
                 transform: "rotate(-45deg)",
                 boxShadow: "0 0 10px rgba(0, 237, 100, 0.5)",
-                pointerEvents: "none"
+                pointerEvents: "none",
+                zIndex: -1 // Ensure handle is behind glass
               }}
             />
 
